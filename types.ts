@@ -1,3 +1,12 @@
+export type Region = 
+  | 'midwest' 
+  | 'southwest' 
+  | 'south' 
+  | 'northeast' 
+  | 'pacific-nw' 
+  | 'california' 
+  | 'colorado';
+
 export interface SocialPost {
   platform: 'Instagram' | 'TikTok' | 'LinkedIn';
   text: string;
@@ -29,6 +38,45 @@ export interface MonthData {
   criticalNotes: string[];
   proTip: string;
   isCritical?: boolean;
+}
+
+export interface RegionalCalendarData {
+  region: Region;
+  regionName: string;
+  months: MonthData[];
+}
+
+export interface RevenueTrackerState {
+  inputs: {
+    instagram: number;
+    facebook: number;
+    tiktok: number;
+    google: number;
+    referrals: number;
+    directWebsite: number;
+    linkedin: number;
+    eventAppearances: number;
+    other: number;
+  };
+  results?: {
+    totalBookings: number;
+    totalRevenue: number;
+    topChannel: {
+      name: string;
+      bookings: number;
+      percentage: number;
+      revenue: number;
+      id: string;
+    };
+    budgetTip: string;
+    sortedChannels: Array<{
+      id: string;
+      name: string;
+      value: number;
+      percentage: number;
+      revenue: number;
+    }>;
+  };
 }
 
 export interface ActionState {
