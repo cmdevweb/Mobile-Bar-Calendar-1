@@ -1,6 +1,7 @@
 import React from 'react';
 import { MonthData } from '../types';
-import { AlertCircle, TrendingUp, DollarSign, Calendar, ChevronDown } from 'lucide-react';
+import { TrendingUp, DollarSign, Calendar, ChevronDown, AlertCircle } from 'lucide-react';
+import { HelpTooltip } from './HelpTooltip';
 
 interface MonthCardProps {
   data: MonthData;
@@ -36,7 +37,7 @@ export const MonthCard: React.FC<MonthCardProps> = ({ data, onClick, isExpanded 
       onClick={onClick}
       className={`
         relative group cursor-pointer transition-all duration-300 ease-out 
-        bg-[#002C4B] rounded-xl overflow-hidden
+        bg-[#002C4B] rounded-xl overflow-visible
         border-2 
         ${data.isCritical ? 'border-brand-gold shadow-brand-gold/20' : 'border-transparent hover:border-white/20'}
         shadow-sm hover:shadow-xl hover:-translate-y-1
@@ -44,11 +45,11 @@ export const MonthCard: React.FC<MonthCardProps> = ({ data, onClick, isExpanded 
       `}
     >
       {/* Header Stripe */}
-      <div className={`h-2 w-full ${getQuarterBadge(data.quarter)}`}></div>
+      <div className={`h-2 w-full rounded-t-lg ${getQuarterBadge(data.quarter)}`}></div>
 
       {/* Critical Badge */}
       {data.isCritical && (
-        <div className="absolute top-4 right-4 animate-pulse">
+        <div className="absolute top-4 right-4 animate-pulse z-10">
             <AlertCircle className="w-5 h-5 text-brand-gold fill-brand-gold/20" />
         </div>
       )}
@@ -70,12 +71,23 @@ export const MonthCard: React.FC<MonthCardProps> = ({ data, onClick, isExpanded 
         
         <p className="text-sm text-blue-200 font-medium uppercase tracking-wide mb-4">{data.season}</p>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
             {/* Activity Level */}
             <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center text-gray-300">
                     <TrendingUp className="w-4 h-4 mr-2 opacity-70" />
-                    <span>Activity</span>
+                    <HelpTooltip 
+                        label="Activity"
+                        desktopText="Shows how busy this month typically is for mobile bar events. 1 = slow month, 5 = peak with lots of bookings. Use this to know when to focus on execution vs. marketing."
+                        mobileTitle="Activity Level: How busy is this month?"
+                        mobileText={
+                            <ul className="list-disc pl-4 space-y-1">
+                                <li><strong>1</strong> = Few events (slow month)</li>
+                                <li><strong>5</strong> = Lots of events (peak month)</li>
+                                <li className="pt-2"><strong>Why it matters:</strong> Slow months = focus on marketing. Busy months = focus on execution.</li>
+                            </ul>
+                        }
+                    />
                 </div>
                 <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((level) => (
@@ -91,7 +103,18 @@ export const MonthCard: React.FC<MonthCardProps> = ({ data, onClick, isExpanded 
             <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center text-gray-300">
                     <DollarSign className="w-4 h-4 mr-2 opacity-70" />
-                    <span>Budget</span>
+                    <HelpTooltip 
+                        label="Budget %"
+                        desktopText="Recommended % of your annual marketing budget to spend this month. Higher % = more aggressive marketing (because demand is peaking or booking windows are open)."
+                        mobileTitle="Marketing Budget %"
+                        mobileText={
+                            <ul className="list-disc pl-4 space-y-1">
+                                <li><strong>Low %</strong> = spend less (slower months)</li>
+                                <li><strong>High %</strong> = spend more (peak booking months)</li>
+                                <li className="pt-2"><strong>Why it matters:</strong> Spend when customers are actively looking. Don’t waste budget in slow months.</li>
+                            </ul>
+                        }
+                    />
                 </div>
                 <div className="w-24 bg-white/10 rounded-full h-2 overflow-hidden">
                     <div 
@@ -105,7 +128,25 @@ export const MonthCard: React.FC<MonthCardProps> = ({ data, onClick, isExpanded 
              <div className="mt-4 pt-3 border-t border-white/10">
                 <div className="flex items-start text-xs text-gray-400">
                     <Calendar className="w-3.5 h-3.5 mr-2 mt-0.5 flex-shrink-0" />
-                    <span className="line-clamp-1">{data.bookingPriority}</span>
+                    <div className="flex-1">
+                        <div className="flex items-center mb-1">
+                            <HelpTooltip 
+                                label="Key Events"
+                                desktopText="Major holidays, themes, or industry events happening this month. These are opportunities to book events (weddings, corporate parties, etc.)."
+                                mobileTitle="Key Events: What’s happening?"
+                                mobileText={
+                                    <ul className="list-disc pl-4 space-y-1">
+                                        <li>Holidays and celebrations</li>
+                                        <li>Industry-specific events</li>
+                                        <li>Peak demand periods</li>
+                                        <li className="pt-2"><strong>Why it matters:</strong> Plan your content and outreach around these dates. People book for these events!</li>
+                                    </ul>
+                                }
+                                className="font-semibold text-gray-300"
+                            />
+                        </div>
+                        <span className="line-clamp-1 text-white">{data.bookingPriority}</span>
+                    </div>
                 </div>
              </div>
         </div>
